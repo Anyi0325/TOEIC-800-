@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>錯題本 — TOEIC 800 學習網</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1 class="site-title">錯題本</h1>
+  </header>
+
+  <nav class="main-nav">
+    <a class="nav-item" href="index.html">首頁</a>
+    <a class="nav-item" href="test.html">多益小測驗</a>
+    <a class="nav-item" href="daily.html">每日一句</a>
+    <a class="nav-item" href="skill.html">弱點診斷</a>
+    <a class="nav-item" href="grammar.html">文法卡片</a>
+    <a class="nav-item" href="errors.html">錯題本</a>
+  </nav>
+
+  <main class="container">
+    <div id="errors-container"></div>
+    <div class="controls">
+      <button id="btn-export" class="btn">匯出錯題（JSON）</button>
+      <button id="btn-clear" class="btn">清空錯題本</button>
+    </div>
+  </main>
+
+  <script src="js/shared.js"></script>
+  <script>
+    function renderErrors() {
+      const list = loadErrorNotes();
+      const el = document.getElementById('errors-container');
+      if(list.length===0){
+        el.innerHTML = '<p>目前錯題本為空。</p>';
+        return;
+      }
+      el.innerHTML = list.map((it, idx) => `
+        <div class="error-card">
+          <div class="error-meta">
+            <strong>Q${idx+1}</strong>
+            <span class="muted"> ${new Date(it.t).toLocaleString()}</span>
+          </div>
+          <p class="error-q">${escapeHtml(it.question)}</p>
+          <p class="muted">正確答案：${escapeHtml(it.answer)}</p>
+          <p>備註：<input data-idx="${idx}" class="note-input" value="${escapeHtml(it.note || '')}" /></p>
+          <div>
+            <button class="btn btn-save-note" data-idx="${idx}">儲存備註</button>
+            <button class="btn btn-delete" data-idx="${idx}">刪除</button>
+          </div>
+        </div>
+      `).join('');
+      // 绑定事件
+      document.querySelectorAll('.btn-delete').forEach(b=>{
+        b.addEventListener('click', e=>{
+          const i = parseInt(e.target.dataset.idx,10);
+          deleteErrorNote(i);
+          renderErrors();
+        });
+      });
+      document.querySelectorAll('.btn-save-note').forEach(b=>{
+        b.addEventListener('click', e=>{
+          const i = parseInt(e.target.dataset.idx,10);
+          const val = document.querySelector(`.note-input[data-idx="${i}"]`).value;
+          updateErrorNote(i, { note: val });
+          renderErrors();
+        });
+      });
+    }
+
+    document.getElementById('btn-export').addEventListener('click', ()=>{
+      const data = JSON.stringify(loadErrorNotes(), null, 2);
+      const blob = new Blob([data], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'error-notes.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById('btn-clear').addEventListener('click', ()=>{
+      if(confirm('確定要清空錯題本嗎？')) {
+        clearErrorNotes();
+        renderErrors();
+      }
+    });
+
+    // helper
+    function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    renderErrors();
+  </script>
+</body>
+</html>
