@@ -1,39 +1,288 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>TOEIC 800 學習網 — 首頁</title>
-  <link rel="stylesheet" href="css/style.css">
+<meta charset="UTF-8">
+<title>TOEIC 800 學習網頁</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f6fa;
+        margin: 0;
+        padding: 0;
+    }
+    header {
+        background: #2d6cdf;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        font-size: 24px;
+    }
+    nav {
+        background: white;
+        padding: 15px;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        box-shadow: 0px 2px 6px rgba(0,0,0,0.2);
+    }
+    nav button {
+        padding: 10px 20px;
+        border: none;
+        background: #2d6cdf;
+        color: white;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    nav button:hover {
+        background: #1b4ea8;
+    }
+    .page {
+        display: none;
+        padding: 20px;
+    }
+    .active {
+        display: block;
+    }
+    .grammar-card {
+        background: white;
+        margin: 10px 0;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+        cursor: pointer;
+    }
+    .grammar-content {
+        display: none;
+        margin-top: 10px;
+    }
+    .question-box {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        box-shadow: 0px 2px 5px rgba(0,0,0,0.1);
+    }
+    .btn {
+        margin-top: 10px;
+        padding: 8px 16px;
+        background: #2d6cdf;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+</style>
 </head>
+
 <body>
-  <header class="site-header">
-    <h1 class="site-title">TOEIC 800 學習網</h1>
-  </header>
+<header>TOEIC 800 學習網頁</header>
 
-  <nav class="main-nav">
-    <a class="nav-item" href="index.html">首頁</a>
-    <a class="nav-item" href="test.html">多益小測驗</a>
-    <a class="nav-item" href="daily.html">每日一句</a>
-    <a class="nav-item" href="skill.html">弱點診斷</a>
-    <a class="nav-item" href="grammar.html">文法卡片</a>
-    <a class="nav-item" href="errors.html">錯題本</a>
-  </nav>
+<!-- 主選單 -->
+<nav>
+    <button onclick="showPage('home')">首頁</button>
+    <button onclick="showPage('test')">多益小測驗</button>
+    <button onclick="showPage('daily')">每日一句</button>
+    <button onclick="showPage('skill')">弱點診斷</button>
+    <button onclick="showPage('grammar')">文法卡片</button>
+    <button onclick="showPage('errors')">錯題本</button>
+</nav>
 
-  <main class="container">
-    <section>
-      <h2 class="section-title">歡迎</h2>
-      <p>目標族群：多益實力約 500 的大學生。這個網站將提供:</p>
-      <ul>
-        <li>多益模擬小測驗（每次 5 題，從 100 題庫抽題）</li>
-        <li>每日一句（短句練習）</li>
-        <li>弱點診斷（每次 10 題）</li>
-        <li>文法互動卡片（完整文法要點）</li>
-        <li>錯題本（自動 + 手動加入、可編輯備註）</li>
-      </ul>
-    </section>
-  </main>
+<!-- 各功能頁面 -->
+<div id="home" class="page active">
+    <h2>歡迎使用 TOEIC 800 學習系統</h2>
+    <p>請從上方選單選擇功能。</p>
+</div>
 
-  <script src="js/shared.js"></script>
+<!-- 1. 多益模擬小測驗 -->
+<div id="test" class="page">
+    <h2>多益模擬小測驗</h2>
+
+    <div id="test-area"></div>
+    <button class="btn" onclick="startTest()">開始測驗</button>
+    <p id="test-result"></p>
+</div>
+
+<!-- 2. 每日一句 -->
+<div id="daily" class="page">
+    <h2>每日一句（Daily TOEIC Sentence）</h2>
+    <p id="daily-sentence" style="font-size:20px; font-weight:bold;"></p>
+    <button class="btn" onclick="loadDailySentence()">換一句</button>
+</div>
+
+<!-- 3. 弱點診斷 -->
+<div id="skill" class="page">
+    <h2>多益弱點診斷</h2>
+    <p>完成以下題目，系統將分析你的弱點。</p>
+
+    <div id="skill-area"></div>
+    <button class="btn" onclick="startSkillCheck()">開始測驗</button>
+    <p id="skill-result"></p>
+</div>
+
+<!-- 4. 文法卡片 -->
+<div id="grammar" class="page">
+    <h2>文法互動卡片</h2>
+
+    <div class="grammar-card" onclick="toggleCard(this)">
+        <strong>時態：現在簡單式</strong>
+        <div class="grammar-content">
+            <p>用於習慣、事實。</p>
+            <p>例句：She works at a bank.</p>
+        </div>
+    </div>
+
+    <div class="grammar-card" onclick="toggleCard(this)">
+        <strong>連接詞：Because / So</strong>
+        <div class="grammar-content">
+            <p>Because：說原因</p>
+            <p>So：說結果</p>
+            <p>例：I was tired, so I went home.</p>
+        </div>
+    </div>
+
+</div>
+
+<!-- 5. 錯題本 -->
+<div id="errors" class="page">
+    <h2>錯題本（Error Notes）</h2>
+
+    <div id="error-list"></div>
+</div>
+
+<script>
+// 顯示頁面
+function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+
+    if (pageId === "errors") loadErrors();
+}
+
+/* ---------------------------
+   1. 多益小測驗
+----------------------------*/
+const testQuestions = [
+    { q: "The meeting will begin ___ 10 a.m.", a: "at", options: ["at", "in", "on"] },
+    { q: "They ___ the report yesterday.", a: "finished", options: ["finish", "finishing", "finished"] }
+];
+
+function startTest() {
+    const box = document.getElementById("test-area");
+    box.innerHTML = "";
+
+    testQuestions.forEach((item, index) => {
+        let html = `<div class='question-box'>
+                        <p>${index+1}. ${item.q}</p>`;
+        item.options.forEach(opt => {
+            html += `<label><input type="radio" name="q${index}" value="${opt}"> ${opt}</label><br>`;
+        });
+        html += `</div>`;
+        box.innerHTML += html;
+    });
+
+    box.innerHTML += `<button class='btn' onclick='submitTest()'>提交</button>`;
+}
+
+function submitTest() {
+    let score = 0;
+    let wrongList = JSON.parse(localStorage.getItem("errorNotes") || "[]");
+
+    testQuestions.forEach((q, index) => {
+        let ans = document.querySelector(`input[name="q${index}"]:checked`);
+        if (ans && ans.value === q.a) score++;
+        else {
+            wrongList.push(q.q + "（正解：" + q.a + "）");
+        }
+    });
+
+    localStorage.setItem("errorNotes", JSON.stringify(wrongList));
+    document.getElementById("test-result").innerText = `你的分數：${score} / ${testQuestions.length}`;
+}
+
+/* ---------------------------
+   2. 每日一句
+----------------------------*/
+const dailySentences = [
+    "Please submit the report by the end of the day.",
+    "The company is planning to expand its business.",
+    "Employees must wear ID badges at all times.",
+    "We appreciate your continued support."
+];
+
+function loadDailySentence() {
+    const random = Math.floor(Math.random() * dailySentences.length);
+    document.getElementById("daily-sentence").innerText = dailySentences[random];
+}
+loadDailySentence();
+
+/* ---------------------------
+   3. 弱點診斷
+----------------------------*/
+const skillQuestions = [
+    { q: "選出文法正確的一句：", a: "She goes to school.", type:"grammar",
+      options: ["She go to school.", "She goes to school."] },
+
+    { q: "business 的意思是？", a: "商業", type:"vocab",
+      options: ["商業", "訊息", "會議"] }
+];
+
+function startSkillCheck() {
+    const box = document.getElementById("skill-area");
+    box.innerHTML = "";
+
+    skillQuestions.forEach((item, index) => {
+        let html = `<div class='question-box'>
+                        <p>${index+1}. ${item.q}</p>`;
+        item.options.forEach(opt => {
+            html += `<label><input type="radio" name="s${index}" value="${opt}"> ${opt}</label><br>`;
+        });
+        html += `</div>`;
+        box.innerHTML += html;
+    });
+
+    box.innerHTML += `<button class='btn' onclick='submitSkill()'>提交</button>`;
+}
+
+function submitSkill() {
+    let wrongGrammar = 0, wrongVocab = 0;
+
+    skillQuestions.forEach((q, index) => {
+        let ans = document.querySelector(`input[name="s${index}"]:checked`);
+        if (!ans || ans.value !== q.a) {
+            if (q.type === "grammar") wrongGrammar++;
+            if (q.type === "vocab") wrongVocab++;
+        }
+    });
+
+    let result = "你的弱點：";
+    if (wrongGrammar > 0) result += "文法 ";
+    if (wrongVocab > 0) result += "單字 ";
+    if (wrongGrammar === 0 && wrongVocab === 0) result = "你目前沒有明顯弱點！";
+
+    document.getElementById("skill-result").innerText = result;
+}
+
+/* ---------------------------
+   4. 文法卡片顯示/隱藏
+----------------------------*/
+function toggleCard(card) {
+    const content = card.querySelector(".grammar-content");
+    content.style.display = (content.style.display === "block") ? "none" : "block";
+}
+
+/* ---------------------------
+   5. 錯題本
+----------------------------*/
+function loadErrors() {
+    let list = JSON.parse(localStorage.getItem("errorNotes") || "[]");
+    const box = document.getElementById("error-list");
+
+    box.innerHTML = list.length === 0 ?
+        "<p>目前沒有錯題。</p>" :
+        list.map(item => `<div class='question-box'>${item}</div>`).join("");
+}
+
+</script>
 </body>
 </html>
