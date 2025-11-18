@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>弱點診斷 — TOEIC 800 學習網</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1 class="site-title">弱點診斷（Skill Check）</h1>
+  </header>
+
+  <nav class="main-nav">
+    <a class="nav-item" href="index.html">首頁</a>
+    <a class="nav-item" href="test.html">多益小測驗</a>
+    <a class="nav-item" href="daily.html">每日一句</a>
+    <a class="nav-item" href="skill.html">弱點診斷</a>
+    <a class="nav-item" href="grammar.html">文法卡片</a>
+    <a class="nav-item" href="errors.html">錯題本</a>
+  </nav>
+
+  <main class="container">
+    <div class="controls">
+      <button id="btn-new-skill" class="btn">抽 10 題（重新抽題）</button>
+      <button id="btn-submit-skill" class="btn" disabled>提交答案</button>
+      <span id="skill-result" class="muted"></span>
+    </div>
+
+    <div id="skill-area"></div>
+  </main>
+
+  <script src="js/shared.js"></script>
+  <script src="js/skill-page.js"></script>
+</body>
+</html>

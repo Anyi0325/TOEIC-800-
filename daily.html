@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>每日一句 — TOEIC 800 學習網</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <h1 class="site-title">每日一句</h1>
+  </header>
+
+  <nav class="main-nav">
+    <a class="nav-item" href="index.html">首頁</a>
+    <a class="nav-item" href="test.html">多益小測驗</a>
+    <a class="nav-item" href="daily.html">每日一句</a>
+    <a class="nav-item" href="skill.html">弱點診斷</a>
+    <a class="nav-item" href="grammar.html">文法卡片</a>
+    <a class="nav-item" href="errors.html">錯題本</a>
+  </nav>
+
+  <main class="container">
+    <div class="daily-box">
+      <p id="daily-sentence" class="daily-sentence"></p>
+      <div>
+        <button id="btn-next-sentence" class="btn">換一句</button>
+        <button id="btn-save-sentence" class="btn">儲存到我的句庫</button>
+      </div>
+      <div id="saved-msg" class="muted"></div>
+    </div>
+  </main>
+
+  <script src="js/shared.js"></script>
+  <script>
+    // 使用 shared.js 的 dailySentences 陣列
+    const dailyEl = document.getElementById('daily-sentence');
+    const savedMsg = document.getElementById('saved-msg');
+
+    function showDailySentence(index) {
+      const s = getDailySentence(index);
+      dailyEl.textContent = s;
+    }
+
+    document.getElementById('btn-next-sentence').addEventListener('click', () => {
+      showDailySentence(Math.floor(Math.random()*dailySentences.length));
+    });
+
+    document.getElementById('btn-save-sentence').addEventListener('click', () => {
+      const s = dailyEl.textContent;
+      saveToMySentences(s);
+      savedMsg.textContent = '已儲存到句庫';
+      setTimeout(()=> savedMsg.textContent='',1200);
+    });
+
+    // 初始載入（依日期固定或隨機）
+    showDailySentence(new Date().getDate() % dailySentences.length);
+  </script>
+</body>
+</html>
